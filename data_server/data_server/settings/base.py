@@ -191,6 +191,7 @@ DJANGO_APPS = (
     # Admin panel and documentation:
     'django.contrib.admin',
     'raven.contrib.django.raven_compat',
+    'rest_framework',
     # 'django.contrib.admindocs',
 )
 
@@ -280,8 +281,4 @@ INSTALLED_APPS += (
 SOUTH_TESTS_MIGRATE = False
 ########## END SOUTH CONFIGURATION
 
-######### OTHER SETTINGS
-EXT_BROKER_URL = 'sensesurf-backend'
-EXT_BROKER_PORT = 61616
-EXT_BROKER_TIMEOUT = 20
-######### END OTHER SETTINGS
+

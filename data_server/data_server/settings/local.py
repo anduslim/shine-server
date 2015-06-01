@@ -26,12 +26,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': normpath(join(DJANGO_ROOT, 'default.db')),
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'shinedb',
+        'USER': 'shine',
+        'PASSWORD': 'abc123',
+        'HOST': 'localhost',
+        'PORT': '5432', # Set to empty string for default.
     }
 }
 ########## END DATABASE CONFIGURATION
@@ -62,3 +62,9 @@ DEBUG_TOOLBAR_PATCH_SETTINGS = False
 # http://django-debug-toolbar.readthedocs.org/en/latest/installation.html
 INTERNAL_IPS = ('127.0.0.1',)
 ########## END TOOLBAR CONFIGURATION
+
+######### OTHER SETTINGS
+EXT_BROKER_URL = 'localhost'
+EXT_BROKER_PORT = 61616
+EXT_BROKER_TIMEOUT = 20
+######### END OTHER SETTINGS

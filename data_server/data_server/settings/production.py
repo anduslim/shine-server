@@ -84,3 +84,9 @@ SECRET_KEY = get_env_setting('SECRET_KEY')
 RAVEN_CONFIG = {
     'dsn': 'http://0b0b11f226b24ac9a76d8998afe93d77:a0a891921e2b46e3aea584974eda8567@sentry.sensesurf.sns-i2r.org/4',
 }
+
+######### OTHER SETTINGS
+EXT_BROKER_URL = 'sensesurf-backend'
+EXT_BROKER_PORT = 61616
+EXT_BROKER_TIMEOUT = 20
+######### END OTHER SETTINGS
