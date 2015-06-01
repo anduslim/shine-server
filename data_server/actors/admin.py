@@ -5,11 +5,14 @@ from .models import(
                 ConfigurationSequence,
                 SensorMap,
                 Sensor,
-                Statistics
+                Statistics,
+                Reading
                 )
+
 admin.site.register(Node)
 admin.site.register(Deployment)
 admin.site.register(ConfigurationSequence)
 admin.site.register(SensorMap)
 admin.site.register(Sensor)
 admin.site.register(Statistics)
+admin.site.register(Reading)

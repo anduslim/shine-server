@@ -1,5 +1,6 @@
 import paho.mqtt.client as paho
 import datetime
+import struct
 import pytz
 import math
 import logging
@@ -12,16 +13,18 @@ class MQTTDemuxClient:
 
     def on_connect(self, client, userdata, flags, rc):
         logger.info('Successfully connected to MQTT broker!')
+        print('Successfully connected to MQTT broker!')
         client.subscribe('shine/+/+/+/#', 2)
         logger.info('On_connect: Subscribing to shine/data/+/+/#')
  
     def on_message(self, client, userdata, msg):
  
         messagebyte = bytearray(msg.payload)
-        print( "On message. Received topic %s with qos %s." % (msg.topic, str(msg.qos)) )
+        datalength = len(messagebyte)
+        print( "On message with len %d. Received topic %s with qos %s." % (datalength, msg.topic, str(msg.qos)) )
         topic = msg.topic.split('/')
         
-        if topic[1] == 'data' and len(topic) >= 4:
+        if topic[1] == 'data' and len(topic) >= 4 and datalength > 14:
             print("Pass packet to data module")
             if topic[2] == 'aggregate':
                 self.parse_aggregate_pkt(topic[3], messagebyte)
@@ -46,22 +49,23 @@ class MQTTDemuxClient:
             n ^= (1<<shift_bit)
             shift_bit+=1
 
-    def parse_aggregate_pkt(self, nodeid, topic, message):
+    def parse_aggregate_pkt(self, nodeid,  message):
         print("Parsing aggregate packet");
-        gw_timestamp, sensor_timestamp, confVer, bitMap, length = struct.unpack('<IIHBB', message[:12])
+        gw_timestamp, gw_id, seq, confVer, bitMap, length = struct.unpack('<IHIHBB', message[:14])
         sys_tz = pytz.timezone(settings.TIME_ZONE)
         RXTimestamp = datetime.datetime.fromtimestamp(gw_timestamp, tz=sys_tz)
-        print("\nGateway Received Timestamp in seconds: %d Date %s" % (gw_timestamp, str(RXTimestamp)))	
+        print("\nGateway %d Received Timestamp in seconds: %d Date %s" % (gw_id, gw_timestamp, str(RXTimestamp)))	
+        print("Seq is %d" % seq)
         print("configVer is %d" % confVer)
         print("bitMap %d" % bitMap)
         print("Bitmap in binary %s" % bin(bitMap))
         print("length %d" % length)
-        lenData = len(message[12:])
-        print("\nRemaining Data Length :%d" %lenData)
+        lenData = len(message[14:])
+        print("Remaining Data Length :%d\n" % lenData)
         #result = TYPE_MAPPING[confSeq](self, int(nodeid), timestamp, seqno, timestamp, bitMap, message[15:])
         
 
-    def parse_sensor_pkt(self, nodeid, topic, message):
+    def parse_sensor_pkt(self, nodeid, message):
         print("Parsing sensor packet");
         print("/******* END PACKET PARSING******/\n\n")
 
@@ -75,5 +79,6 @@ class MQTTDemuxClient:
         self.mqttc.on_connect = self.on_connect
         self.mqttc.on_publish = self.on_publish
         self.mqttc.on_subscribe = self.on_subscribe
+        print('Attempting connection to MQTT broker...')
         self.mqttc.connect(settings.EXT_BROKER_URL, settings.EXT_BROKER_PORT, settings.EXT_BROKER_TIMEOUT)
         self.mqttc.loop_forever()

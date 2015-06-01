@@ -13,7 +13,7 @@ class Node(models.Model):
                         related_name='node')
 
     def __str__(self):
-        return ', '.join([str(self.guid)])
+        return ', '.join([str(self.node_id)])
 
 
 class Deployment(models.Model):
@@ -26,7 +26,7 @@ class Deployment(models.Model):
 
     location = models.CharField(max_length=128, blank=True)
 
-    def __str__():
+    def __str__(self):
         return ', '.join([str(self.id), self.name])
 
 

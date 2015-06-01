@@ -23,7 +23,7 @@ path.append(DJANGO_ROOT)
 
 ########## DEBUG CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = False
+DEBUG = True
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-debug
 TEMPLATE_DEBUG = DEBUG
@@ -96,7 +96,6 @@ STATIC_URL = '/static/'
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
 STATICFILES_DIRS = (
-   #'/root/shine-server/data_server/static/',
     normpath(join(SITE_ROOT, 'static')),
 )
 
@@ -197,6 +196,7 @@ DJANGO_APPS = (
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
+     'mqtt_subscriber',
      'data_server',
      'actors'
 )
@@ -281,7 +281,7 @@ SOUTH_TESTS_MIGRATE = False
 ########## END SOUTH CONFIGURATION
 
 ######### OTHER SETTINGS
-EXT_BROKER_URL = "unisense.i2r.a-star.edu.sg"
+EXT_BROKER_URL = 'sensesurf-backend'
 EXT_BROKER_PORT = 61616
 EXT_BROKER_TIMEOUT = 20
 ######### END OTHER SETTINGS
