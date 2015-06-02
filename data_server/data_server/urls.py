@@ -18,6 +18,10 @@ router.register(r'nodes', views.NodeViewSet)
 urlpatterns = [
     url(r'^deployments/$', views.deployment_list),
     url(r'^deployments/(?P<pk>[0-9]+)/$', views.deployment_detail),
+    url(r'^nodes/$', views.node_list),
+    url(r'^nodes/(?P<pk>[0-9]+)/$', views.node_detail),
+    url(r'^confseq/$', views.confseq_list),
+    url(r'^confseq/(?P<pk>[0-9]+)/$', views.confseq_detail),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
 
