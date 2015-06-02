@@ -1,59 +1,60 @@
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
-from actors.models import Deployment
-from data_server.serializers import DeploymentSerializer
+from rest_framework import viewsets
 
-class JSONResponse(HttpResponse):
-    """
-    An HttpResponse that renders its content into JSON.
-    """
-    def __init__(self, data, **kwargs):
-        content = JSONRenderer().render(data)
-        kwargs['content_type'] = 'application/json'
-        super(JSONResponse, self).__init__(content, **kwargs)
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
-@csrf_exempt
-def deployment_list(request):
+from actors.models import Deployment, Node
+from data_server.serializers import DeploymentSerializer, NodeSerializer, ConfigSeqSerializer, SensorMapSerializer, SensorSerializer, ReadingSerializer, StatisticsSerializer
+
+
+
+@api_view(['GET', 'POST'])
+def deployment_list(request, format=None):
     """
-    List all code deployments, or create a new deployment.
+    List all deployments, or create a new deployment.
     """
     if request.method == 'GET':
         deployments = Deployment.objects.all()
         serializer = DeploymentSerializer(deployments, many=True)
-        return JSONResponse(serializer.data)
+        return Response(serializer.data)
 
     elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = DeploymentSerializer(data=data)
+        serializer = DeploymentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JSONResponse(serializer.data, status=201)
-        return JSONResponse(serializer.errors, status=400)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_exempt
-def deployment_detail(request, pk):
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def deployment_detail(request, pk, format=None):
     """
-    Retrieve, update or delete a code deployment.
+    Retrieve, update or delete a deployment instance.
     """
     try:
-        deployment = Deployment.objects.get(pk=pk)
+        deployement = Deployment.objects.get(pk=pk)
     except Deployment.DoesNotExist:
-        return HttpResponse(status=404)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = DeploymentSerializer(deployment)
-        return JSONResponse(serializer.data)
+        serializer = DeploymentSerializer(deployement)
+        return Response(serializer.data)
 
     elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        serializer = SnippetSerializer(deployment, data=data)
+        serializer = DeploymentSerializer(deployement, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JSONResponse(serializer.data)
-        return JSONResponse(serializer.errors, status=400)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        deployment.delete()
-        return HttpResponse(status=204)
+        deployement.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class NodeViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows nodes to be viewed or edited.
+    """
+    queryset = Node.objects.all()
+    serializer_class = NodeSerializer

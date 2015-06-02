@@ -2,13 +2,13 @@ from django.forms import widgets
 from rest_framework import serializers
 from actors.models import Node, Deployment, ConfigurationSequence, SensorMap, Sensor, Reading, Statistics
 
-class NodeSerializer(serializers.ModelSerializer):
+class NodeSerializer(serializers.HyperlinkedModelSerializer):
     # pk = serializers.IntegerField(read_only=True)
     # node_id = serializers.IntegerField(required=True, allow_blank=False)
     
     class Meta:
             model = Node
-            fields = ('id', 'node_id')
+            fields = ('id', 'node_id', 'conf_seq', 'deployment')
 
     def create(self, validated_data):
         """
@@ -24,7 +24,7 @@ class NodeSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-class DeploymentSerializer(serializers.ModelSerializer):
+class DeploymentSerializer(serializers.HyperlinkedModelSerializer):
     # pk = serializers.IntegerField(read_only=True)
     # name = serializers.CharField(required=True, allow_blank=False, max_length=128)
     # cluster = serializers.CharField(required=False, allow_blank=True, max_length=128)
@@ -50,7 +50,7 @@ class DeploymentSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-class ConfigSeqSerializer(serializers.ModelSerializer):
+class ConfigSeqSerializer(serializers.HyperlinkedModelSerializer):
     # pk = serializers.IntegerField(read_only=True)
     # type_id = serializers.IntegerField(required=True, allow_blank=False)
     # ip_address = serializers.CharField(required=False, allow_blank=True, max_length=128)
@@ -78,13 +78,13 @@ class ConfigSeqSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-class SensorMapSerializer(serializers.ModelSerializer):
+class SensorMapSerializer(serializers.HyperlinkedModelSerializer):
     # pk = serializers.IntegerField(read_only=True)
     # bit_position = serializers.IntegerField(required=True, allow_blank=False)
 
     class Meta:
             model = SensorMap
-            fields = ('id', 'bit_position')
+            fields = ('id', 'bit_position', 'conf_seq', 'sensor')
 
     def create(self, validated_data):
         """
@@ -100,7 +100,7 @@ class SensorMapSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-class SensorSerializer(serializers.ModelSerializer):
+class SensorSerializer(serializers.HyperlinkedModelSerializer):
     # pk = serializers.IntegerField(read_only=True)
     # name = serializers.CharField(required=True, allow_blank=False, max_length=128)
     # modality = serializers.CharField(required=True, allow_blank=False, max_length=128)
@@ -132,7 +132,7 @@ class SensorSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-class ReadingSerializer(serializers.ModelSerializer):
+class ReadingSerializer(serializers.HyperlinkedModelSerializer):
     # pk = serializers.IntegerField(read_only=True)
     # timestamp = serializers.DateTimeField(read_only=True)
     # gwtimestamp = serializers.DateTimeField()
@@ -141,7 +141,7 @@ class ReadingSerializer(serializers.ModelSerializer):
 
     class Meta:
             model = Reading
-            fields = ('id', 'timestamp', 'gwtimestamp', 'value', 'tag')
+            fields = ('id', 'timestamp', 'gwtimestamp', 'node', 'sensor', 'value', 'tag')
 
     def create(self, validated_data):
         """
@@ -160,7 +160,7 @@ class ReadingSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-class StatisticsSerializer(serializers.ModelSerializer):
+class StatisticsSerializer(serializers.HyperlinkedModelSerializer):
     # pk = serializers.IntegerField(read_only=True)
     # name = serializers.CharField(required=True, allow_blank=False, max_length=128)
     # modality = serializers.CharField(required=True, allow_blank=False, max_length=128)

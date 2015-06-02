@@ -3,12 +3,25 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.views.generic import TemplateView
 from data_server import views
+from rest_framework import routers
+from rest_framework.urlpatterns import format_suffix_patterns
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
+router = routers.DefaultRouter()
+router.register(r'nodes', views.NodeViewSet)
+
+
+
+urlpatterns = [
+    url(r'^deployments/$', views.deployment_list),
+    url(r'^deployments/(?P<pk>[0-9]+)/$', views.deployment_detail),
+]
+urlpatterns = format_suffix_patterns(urlpatterns)
+
+urlpatterns += patterns('',
     url(r'^$', TemplateView.as_view(template_name='base.html')),
 
     # Examples:
@@ -19,11 +32,10 @@ urlpatterns = patterns('',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
+    url(r'^', include(router.urls)),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^deployments/$', views.deployment_list),
-    url(r'^deployments/(?P<pk>[0-9]+)/$', views.deployment_detail),
-)
 
+)
 # Uncomment the next line to serve media files in dev.
 # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
