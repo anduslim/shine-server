@@ -1,12 +1,14 @@
 from django.forms import widgets
 from rest_framework import serializers
-from actors.models import Node, Deployment, ConfigurationSequence \
-                    SensorMap, Sensor
-from ConfigurationSequence import SENSOR_NODE, NODE_CHOICES
+from actors.models import Node, Deployment, ConfigurationSequence, SensorMap, Sensor, Reading, Statistics
 
-class NodeSerializer(serializers.Serializer):
-    pk = serializers.IntegerField(read_only=True)
-    node_id = serializers.IntegerField(required=True, allow_blank=False)
+class NodeSerializer(serializers.ModelSerializer):
+    # pk = serializers.IntegerField(read_only=True)
+    # node_id = serializers.IntegerField(required=True, allow_blank=False)
+    
+    class Meta:
+            model = Node
+            fields = ('id', 'node_id')
 
     def create(self, validated_data):
         """
@@ -22,11 +24,15 @@ class NodeSerializer(serializers.Serializer):
         instance.save()
         return instance
 
-class DeploymentSerializer(serializers.Serializer):
-    pk = serializers.IntegerField(read_only=True)
-    name = serializers.CharField(required=True, allow_blank=False, max_length=128)
-    cluster = serializers.CharField(required=False, allow_blank=True, max_length=128)
-    location = serializers.CharField(required=False, allow_blank=True, max_length=128)
+class DeploymentSerializer(serializers.ModelSerializer):
+    # pk = serializers.IntegerField(read_only=True)
+    # name = serializers.CharField(required=True, allow_blank=False, max_length=128)
+    # cluster = serializers.CharField(required=False, allow_blank=True, max_length=128)
+    # location = serializers.CharField(required=False, allow_blank=True, max_length=128)
+ 
+    class Meta:
+            model = Deployment
+            fields = ('id', 'name', 'code', 'cluster', 'location')
 
     def create(self, validated_data):
         """
@@ -44,12 +50,16 @@ class DeploymentSerializer(serializers.Serializer):
         instance.save()
         return instance
 
-class ConfigSeqSerializer(serializers.Serializer):
-    pk = serializers.IntegerField(read_only=True)
-    type_id = serializers.IntegerField(required=True, allow_blank=False)
-    ip_address = serializers.CharField(required=False, allow_blank=True, max_length=128)
-    gateway_ip = serializers.CharField(required=False, allow_blank=True, max_length=128)
-    node_profile_type = serializers.ChoiceField(choices=NODE_CHOICES, default=SENSOR_NODE)
+class ConfigSeqSerializer(serializers.ModelSerializer):
+    # pk = serializers.IntegerField(read_only=True)
+    # type_id = serializers.IntegerField(required=True, allow_blank=False)
+    # ip_address = serializers.CharField(required=False, allow_blank=True, max_length=128)
+    # gateway_ip = serializers.CharField(required=False, allow_blank=True, max_length=128)
+    # node_profile_type = serializers.ChoiceField(choices=NODE_CHOICES, default=SENSOR_NODE)
+
+    class Meta:
+            model = ConfigurationSequence
+            fields = ('id', 'type_id', 'ip_address', 'gateway_ip', 'node_profile_type')
 
     def create(self, validated_data):
         """
@@ -68,9 +78,13 @@ class ConfigSeqSerializer(serializers.Serializer):
         instance.save()
         return instance
 
-class SensorMapSerializer(serializers.Serializer):
-    pk = serializers.IntegerField(read_only=True)
-    bit_position = serializers.IntegerField(required=True, allow_blank=False)
+class SensorMapSerializer(serializers.ModelSerializer):
+    # pk = serializers.IntegerField(read_only=True)
+    # bit_position = serializers.IntegerField(required=True, allow_blank=False)
+
+    class Meta:
+            model = SensorMap
+            fields = ('id', 'bit_position')
 
     def create(self, validated_data):
         """
@@ -86,14 +100,18 @@ class SensorMapSerializer(serializers.Serializer):
         instance.save()
         return instance
 
-class SensorSerializer(serializers.Serializer):
-    pk = serializers.IntegerField(read_only=True)
-    name = serializers.CharField(required=True, allow_blank=False, max_length=128)
-    modality = serializers.CharField(required=True, allow_blank=False, max_length=128)
-    data_length = serializers.IntegerField(required=True, allow_blank=False)
-    data_api_name = serializers.CharField(required=True, allow_blank=False, max_length=128)
-    product_model = serializers.CharField(required=False, allow_blank=True, max_length=128)
-    sensing_interval = serializers.IntegerField(required=False, allow_blank=True)
+class SensorSerializer(serializers.ModelSerializer):
+    # pk = serializers.IntegerField(read_only=True)
+    # name = serializers.CharField(required=True, allow_blank=False, max_length=128)
+    # modality = serializers.CharField(required=True, allow_blank=False, max_length=128)
+    # data_length = serializers.IntegerField(required=True, allow_blank=False)
+    # data_api_name = serializers.CharField(required=True, allow_blank=False, max_length=128)
+    # product_model = serializers.CharField(required=False, allow_blank=True, max_length=128)
+    # sensing_interval = serializers.IntegerField(required=False, allow_blank=True)
+
+    class Meta:
+            model = Sensor
+            fields = ('id', 'name', 'modality', 'data_length', 'data_api_name', 'product_model', 'sensing_interval')
 
     def create(self, validated_data):
         """
@@ -114,12 +132,16 @@ class SensorSerializer(serializers.Serializer):
         instance.save()
         return instance
 
-class ReadingSerializer(serializers.Serializer):
-    pk = serializers.IntegerField(read_only=True)
-    timestamp = serializers.DateTimeField(read_only=True)
-    gwtimestamp = serializers.DateTimeField()
-    value = serializers.CharField(required=True, allow_blank=False, max_length=50)
-    tag = serializers.CharField(required=False, allow_blank=True, max_length=50)
+class ReadingSerializer(serializers.ModelSerializer):
+    # pk = serializers.IntegerField(read_only=True)
+    # timestamp = serializers.DateTimeField(read_only=True)
+    # gwtimestamp = serializers.DateTimeField()
+    # value = serializers.CharField(required=True, allow_blank=False, max_length=50)
+    # tag = serializers.CharField(required=False, allow_blank=True, max_length=50)
+
+    class Meta:
+            model = Reading
+            fields = ('id', 'timestamp', 'gwtimestamp', 'value', 'tag')
 
     def create(self, validated_data):
         """
@@ -138,13 +160,17 @@ class ReadingSerializer(serializers.Serializer):
         instance.save()
         return instance
 
-class StatisticsSerializer(serializers.Serializer):
-    pk = serializers.IntegerField(read_only=True)
-    name = serializers.CharField(required=True, allow_blank=False, max_length=128)
-    modality = serializers.CharField(required=True, allow_blank=False, max_length=128)
-    data_length = serializers.IntegerField(required=True, allow_blank=False)
-    data_api_name = serializers.CharField(required=True, allow_blank=False, max_length=128)
-    sensing_interval = serializers.IntegerField(required=False, allow_blank=True)
+class StatisticsSerializer(serializers.ModelSerializer):
+    # pk = serializers.IntegerField(read_only=True)
+    # name = serializers.CharField(required=True, allow_blank=False, max_length=128)
+    # modality = serializers.CharField(required=True, allow_blank=False, max_length=128)
+    # data_length = serializers.IntegerField(required=True, allow_blank=False)
+    # data_api_name = serializers.CharField(required=True, allow_blank=False, max_length=128)
+    # sensing_interval = serializers.IntegerField(required=False, allow_blank=True)
+
+    class Meta:
+            model = Reading
+            fields = ('id', 'name', 'modality', 'data_length', 'data_api_name', 'sensing_interval')
 
     def create(self, validated_data):
         """

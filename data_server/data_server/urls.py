@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
 from django.conf import settings
 from django.views.generic import TemplateView
+from data_server import views
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -19,6 +20,8 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^deployments/$', views.deployment_list),
+    url(r'^deployments/(?P<pk>[0-9]+)/$', views.deployment_detail),
 )
 
 # Uncomment the next line to serve media files in dev.
