@@ -58,7 +58,7 @@ class ConfigurationSequence(models.Model):
 class SensorMap(models.Model):
     ''' Sensor Map Information
     '''
-    bit_position = models.PositiveSmallIntegerField()
+    bit_position = models.PositiveSmallIntegerField('Bit Position', blank=False)
 
     conf_seq = models.ForeignKey('ConfigurationSequence', blank=False, null=False,
                         related_name='sensor_map')
@@ -79,7 +79,7 @@ class Sensor(models.Model):
 
     modality = models.CharField(max_length=128, blank=False)
             
-    data_length = models.PositiveIntegerField('data length')
+    data_length = models.PositiveIntegerField('data length', blank=False)
 
     data_api_name = models.CharField(max_length=128, blank=False)
 
