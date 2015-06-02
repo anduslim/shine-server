@@ -27,7 +27,7 @@ class Deployment(models.Model):
     location = models.CharField(max_length=128, blank=True)
 
     def __str__(self):
-        return ', '.join([str(self.id), self.name])
+        return ', '.join([str(self.id), self.name, self.cluster, self.location])
 
 
 class ConfigurationSequence(models.Model):
@@ -67,7 +67,7 @@ class SensorMap(models.Model):
                         related_name='sensor_map')
 
     def __str__(self):
-        return ', '.join(['config_id-' + str(self.conf_seq_type_id), 'bit-' + 
+        return ', '.join(['config_id-' + str(self.conf_seq), 'bit-' + 
                 str(self.bit_position), self.sensor.modality])
    
 
@@ -88,7 +88,7 @@ class Sensor(models.Model):
     sensing_interval = models.PositiveIntegerField()
 
     def __str__(self):
-        return ', '.join([self.modality, str(data_length)])
+        return ', '.join([self.modality, str(self.data_length)])
 
 
 class Reading(models.Model):

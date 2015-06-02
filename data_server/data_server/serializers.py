@@ -32,7 +32,7 @@ class DeploymentSerializer(serializers.ModelSerializer):
  
     class Meta:
             model = Deployment
-            fields = ('id', 'name', 'code', 'cluster', 'location')
+            fields = ('id', 'name', 'cluster', 'location')
 
     def create(self, validated_data):
         """
