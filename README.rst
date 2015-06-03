@@ -21,16 +21,16 @@ export SECRET_KEY=dsfdf32#@$#43242$#d34fdsgfsd%#@*323rdcsc
 
 ## For local
 export DJANGO_SETTINGS_MODULE=data_server.settings.local
-export SECRET_KEY=dsf132sf24$&(4fdsgfsd%#@*323rdcsc
+export SECRET_KEY=dsf132sf24$&4fdsgfsd%#@*323rdcsc
 ```
 
 Run command
 ===========
 *Run REST API server*
-  In your shine-server folder, run `./manage.py runserver 0.0.0.0:80` to run in local machine with port 80.
+  In your shine-server folder, run ``./manage.py runserver 0.0.0.0:80`` to run in local machine with port 80.
 
 *Run demux service*
-  In your shine-server folder, run `./manage.py demux`.
+  In your shine-server folder, run ``./manage.py demux``.
   
 Usage
 =====
