@@ -14,12 +14,14 @@ Setup
 =====
 In your bashrc file, add the following environmental settings as needed 
 
+*For Production*
 ``
-## For production
 export DJANGO_SETTINGS_MODULE=data_server.settings.production
 export SECRET_KEY=dsfdf32#@$#43242$#d34fdsgfsd%#@*323rdcsc
+``
 
-## For local
+*For Local*
+``
 export DJANGO_SETTINGS_MODULE=data_server.settings.local
 export SECRET_KEY=dsf132sf24$&4fdsgfsd%#@*323rdcsc
 ``
