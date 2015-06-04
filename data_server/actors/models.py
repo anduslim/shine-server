@@ -12,6 +12,8 @@ class Node(models.Model):
     deployment = models.ForeignKey('Deployment', blank=False, null=False,
                         related_name='node')
 
+    owner = models.ForeignKey('auth.User', related_name='node')
+
     def __str__(self):
         return ', '.join([str(self.node_id)])
 

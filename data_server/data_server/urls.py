@@ -10,33 +10,27 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from django.contrib import admin
 admin.autodiscover()
 
-router = routers.DefaultRouter()
-router.register(r'nodes', views.NodeViewSet)
-
-
 
 urlpatterns = [
-    url(r'^deployments/$', views.DeploymentList.as_view()),
-    url(r'^deployments/(?P<pk>[0-9]+)/$', views.DeploymentDetail.as_view()),
-    url(r'^nodes/$', views.node_list),
-    url(r'^nodes/(?P<pk>[0-9]+)/$', views.node_detail),
-    url(r'^confseq/$', views.confseq_list),
-    url(r'^confseq/(?P<pk>[0-9]+)/$', views.confseq_detail),
+    url(r'^deployment/$', views.DeploymentList.as_view()),
+    url(r'^deployment/(?P<pk>[0-9]+)/$', views.DeploymentDetail.as_view()),
+    url(r'^node/$', views.NodeList.as_view()),
+    url(r'^node/(?P<pk>[0-9]+)/$', views.NodeDetail.as_view()),
+    url(r'^confseq/$', views.ConfSeqList.as_view()),
+    url(r'^confseq/(?P<pk>[0-9]+)/$', views.ConfSeqDetail.as_view()),
+    url(r'^sensormap/$', views.SensorMapList.as_view()),
+    url(r'^sensormap/(?P<pk>[0-9]+)/$', views.SensorMapDetail.as_view()),
+    url(r'^sensor/$', views.SensorList.as_view()),
+    url(r'^sensor/(?P<pk>[0-9]+)/$', views.SensorDetail.as_view()),
+    url(r'^reading/$', views.ReadingList.as_view()),
+    url(r'^reading/(?P<pk>[0-9]+)/$', views.ReadingDetail.as_view()),
+    url(r'^statistics/$', views.StatisticsList.as_view()),
+    url(r'^statistics/(?P<pk>[0-9]+)/$', views.StatisticsDetail.as_view()),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
 
 urlpatterns += patterns('',
     url(r'^$', TemplateView.as_view(template_name='base.html')),
-
-    # Examples:
-    # url(r'^$', 'data_server.views.home', name='home'),
-    # url(r'^data_server/', include('data_server.foo.urls')),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
-    url(r'^', include(router.urls)),
     url(r'^admin/', include(admin.site.urls)),
 
 )

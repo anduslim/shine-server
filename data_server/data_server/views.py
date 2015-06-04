@@ -1,174 +1,115 @@
 
-from rest_framework import status
+from rest_framework import status, mixins, generics
 from rest_framework.decorators import api_view
 
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from actors.models import Deployment, Node, ConfigurationSequence
+from actors.models import Deployment, Node, ConfigurationSequence, SensorMap, Sensor, Reading, Statistics
 from data_server.serializers import DeploymentSerializer, NodeSerializer, ConfigSeqSerializer, SensorMapSerializer, SensorSerializer, ReadingSerializer, StatisticsSerializer
 
-class DeploymentList(mixins.ListModelMixin,
-                  mixins.CreateModelMixin,
-                  generics.GenericAPIView):
+
+class DeploymentList(generics.ListCreateAPIView):
     """
     List all deployments, or create a new deployment.
     """
     queryset = Deployment.objects.all()
     serializer_class = DeploymentSerializer
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-class DeploymentDetail(mixins.RetrieveModelMixin,
-                    mixins.UpdateModelMixin,
-                    mixins.DestroyModelMixin,
-                    generics.GenericAPIView):
+class DeploymentDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     Retrieve, update or delete a deployment instance.
     """
     queryset = Deployment.objects.all()
     serializer_class = DeploymentSerializer
 
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
 
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
-
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
-
-@api_view(['GET', 'POST'])
-def deployment_list(request, format=None):
-    """
-    List all deployments, or create a new deployment.
-    """
-    if request.method == 'GET':
-        deployments = Deployment.objects.all()
-        serializer = DeploymentSerializer(deployments, many=True)
-        return Response(serializer.data)
-
-    elif request.method == 'POST':
-        serializer = DeploymentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['GET', 'PUT', 'DELETE'])
-def deployment_detail(request, pk, format=None):
-    """
-    Retrieve, update or delete a deployment instance.
-    """
-    try:
-        deployment = Deployment.objects.get(pk=pk)
-    except Deployment.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        serializer = DeploymentSerializer(deployment)
-        return Response(serializer.data)
-
-    elif request.method == 'PUT':
-        serializer = DeploymentSerializer(deployment, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'DELETE':
-        deployment.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-@api_view(['GET', 'POST'])
-def node_list(request, format=None):
+class NodeList(generics.ListCreateAPIView):
     """
     List all nodes, or create a new node.
     """
-    if request.method == 'GET':
-        nodes = Node.objects.all()
-        serializer = NodeSerializer(nodes, many=True)
-        return Response(serializer.data)
+    queryset = Node.objects.all()
+    serializer_class = NodeSerializer
 
-    elif request.method == 'POST':
-        serializer = NodeSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['GET', 'PUT', 'DELETE'])
-def node_detail(request, pk, format=None):
+class NodeDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     Retrieve, update or delete a node instance.
     """
-    try:
-        node = Node.objects.get(pk=pk)
-    except Node.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+    queryset = Node.objects.all()
+    serializer_class = NodeSerializer
 
-    if request.method == 'GET':
-        serializer = NodeSerializer(node)
-        return Response(serializer.data)
 
-    elif request.method == 'PUT':
-        serializer = NodeSerializer(node, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'DELETE':
-        node.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-@api_view(['GET', 'POST'])
-def confseq_list(request, format=None):
+class ConfSeqList(generics.ListCreateAPIView):
     """
-    List all confseqs, or create a new confseq.
+    List all configurationsequences, or create a new configurationsequence.
     """
-    if request.method == 'GET':
-        confseqs = ConfigurationSequence.objects.all()
-        serializer = ConfigSeqSerializer(confseqs, many=True)
-        return Response(serializer.data)
+    queryset = ConfigurationSequence.objects.all()
+    serializer_class = ConfigSeqSerializer
 
-    elif request.method == 'POST':
-        serializer = ConfigSeqSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['GET', 'PUT', 'DELETE'])
-def confseq_detail(request, pk, format=None):
+class ConfSeqDetail(generics.RetrieveUpdateDestroyAPIView):
     """
-    Retrieve, update or delete a confseq instance.
+    Retrieve, update or delete a configurationsequence instance.
     """
-    try:
-        confseq = ConfigurationSequence.objects.get(pk=pk)
-    except ConfigurationSequence.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+    queryset = ConfigurationSequence.objects.all()
+    serializer_class = ConfigSeqSerializer
 
-    if request.method == 'GET':
-        serializer = ConfigSeqSerializer(confseq)
-        return Response(serializer.data)
 
-    elif request.method == 'PUT':
-        serializer = ConfigSeqSerializer(confseq, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class SensorMapList(generics.ListCreateAPIView):
+    """
+    List all sensor maps, or create a new sensor map.
+    """
+    queryset = SensorMap.objects.all()
+    serializer_class = SensorMapSerializer
 
-    elif request.method == 'DELETE':
-        confseq.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+class SensorMapDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, update or delete a sensor map instance.
+    """
+    queryset = SensorMap.objects.all()
+    serializer_class = SensorMapSerializer
 
+
+class SensorList(generics.ListCreateAPIView):
+    """
+    List all sensors, or create a new sensor.
+    """
+    queryset = Sensor.objects.all()
+    serializer_class = SensorSerializer
+
+class SensorDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, update or delete a sensor instance.
+    """
+    queryset = Sensor.objects.all()
+    serializer_class = SensorSerializer
+
+
+class ReadingList(generics.ListCreateAPIView):
+    """
+    List all readings, or create a new reading.
+    """
+    queryset = Reading.objects.all()
+    serializer_class = ReadingSerializer
+
+class ReadingDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, update or delete a reading instance.
+    """
+    queryset = Reading.objects.all()
+    serializer_class = ReadingSerializer
+
+
+class StatisticsList(generics.ListCreateAPIView):
+    """
+    List all statistics, or create a new statistic.
+    """
+    queryset = Statistics.objects.all()
+    serializer_class = StatisticsSerializer
+
+class StatisticsDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, update or delete a statistic instance.
+    """
+    queryset = Statistics.objects.all()
+    serializer_class = StatisticsSerializer
