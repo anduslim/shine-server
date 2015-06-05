@@ -1,14 +1,18 @@
 
-from rest_framework import status, mixins, generics
-from rest_framework.decorators import api_view
-
+from rest_framework import generics
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
+from rest_framework import permissions
 from actors.models import Deployment, Node, ConfigurationSequence, SensorMap, Sensor, Reading, Statistics
 from data_server.serializers import DeploymentSerializer, NodeSerializer, ConfigSeqSerializer, SensorMapSerializer, SensorSerializer, ReadingSerializer, StatisticsSerializer
+from data_server.permissions import IsOwnerOrReadOnly
 
+# from rest_framework.authentication import SessionAuthentication as OriginalSessionAuthentication
+
+# class SessionAuthentication(OriginalSessionAuthentication):
+#     def enforce_csrf(self, request):
+#         return
 
 class DeploymentList(generics.ListCreateAPIView):
     """
@@ -16,6 +20,12 @@ class DeploymentList(generics.ListCreateAPIView):
     """
     queryset = Deployment.objects.all()
     serializer_class = DeploymentSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+                      # IsOwnerOrReadOnly)
+
+    # def perform_create(self, serializer):
+    #     serializer.save(owner=self.request.user)
+
 
 class DeploymentDetail(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -23,6 +33,8 @@ class DeploymentDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = Deployment.objects.all()
     serializer_class = DeploymentSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    #                   IsOwnerOrReadOnly,)
 
 
 class NodeList(generics.ListCreateAPIView):
@@ -31,6 +43,12 @@ class NodeList(generics.ListCreateAPIView):
     """
     queryset = Node.objects.all()
     serializer_class = NodeSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    #                   IsOwnerOrReadOnly,)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
 
 class NodeDetail(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -38,6 +56,8 @@ class NodeDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = Node.objects.all()
     serializer_class = NodeSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    #                   IsOwnerOrReadOnly,)
 
 
 class ConfSeqList(generics.ListCreateAPIView):
@@ -46,6 +66,8 @@ class ConfSeqList(generics.ListCreateAPIView):
     """
     queryset = ConfigurationSequence.objects.all()
     serializer_class = ConfigSeqSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)    
+
 
 class ConfSeqDetail(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -53,7 +75,7 @@ class ConfSeqDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = ConfigurationSequence.objects.all()
     serializer_class = ConfigSeqSerializer
-
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 class SensorMapList(generics.ListCreateAPIView):
     """
@@ -61,6 +83,7 @@ class SensorMapList(generics.ListCreateAPIView):
     """
     queryset = SensorMap.objects.all()
     serializer_class = SensorMapSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 class SensorMapDetail(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -68,7 +91,7 @@ class SensorMapDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = SensorMap.objects.all()
     serializer_class = SensorMapSerializer
-
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 class SensorList(generics.ListCreateAPIView):
     """
@@ -76,6 +99,7 @@ class SensorList(generics.ListCreateAPIView):
     """
     queryset = Sensor.objects.all()
     serializer_class = SensorSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 class SensorDetail(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -83,7 +107,7 @@ class SensorDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = Sensor.objects.all()
     serializer_class = SensorSerializer
-
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 class ReadingList(generics.ListCreateAPIView):
     """
@@ -91,6 +115,7 @@ class ReadingList(generics.ListCreateAPIView):
     """
     queryset = Reading.objects.all()
     serializer_class = ReadingSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 class ReadingDetail(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -98,7 +123,7 @@ class ReadingDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = Reading.objects.all()
     serializer_class = ReadingSerializer
-
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 class StatisticsList(generics.ListCreateAPIView):
     """
@@ -106,6 +131,7 @@ class StatisticsList(generics.ListCreateAPIView):
     """
     queryset = Statistics.objects.all()
     serializer_class = StatisticsSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 class StatisticsDetail(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -113,3 +139,5 @@ class StatisticsDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = Statistics.objects.all()
     serializer_class = StatisticsSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    

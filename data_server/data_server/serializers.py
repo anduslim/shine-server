@@ -5,17 +5,19 @@ from actors.models import Node, Deployment, ConfigurationSequence, SensorMap, Se
 
 class NodeSerializer(serializers.ModelSerializer):
     #deployment = serializers.CharField(source='deployment.name')
+    #owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
             model = Node
-            fields = ('id', 'node_id', 'conf_seq', 'deployment')
+            fields = ('id', 'node_id', 'conf_seq', 'deployment') #, 'owner')
 
 
 class DeploymentSerializer(serializers.ModelSerializer):
+    #owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
             model = Deployment
-            fields = ('id', 'name', 'cluster', 'location')
+            fields = ('id', 'name', 'cluster', 'location') #, 'owner')
 
 
 class ConfigSeqSerializer(serializers.ModelSerializer):

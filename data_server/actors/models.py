@@ -12,7 +12,7 @@ class Node(models.Model):
     deployment = models.ForeignKey('Deployment', blank=False, null=False,
                         related_name='node')
 
-    owner = models.ForeignKey('auth.User', related_name='node')
+    # owner = models.ForeignKey('auth.User', blank=True,  null=True, related_name='node')
 
     def __str__(self):
         return ', '.join([str(self.node_id)])
@@ -27,6 +27,8 @@ class Deployment(models.Model):
     cluster = models.CharField(max_length=128, blank=True)
 
     location = models.CharField(max_length=128, blank=True)
+
+    # owner = models.ForeignKey('auth.User', blank=True, null=True, related_name='deployment')
 
     def __str__(self):
         return ', '.join([str(self.id), self.name, self.cluster, self.location])
