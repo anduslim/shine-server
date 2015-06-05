@@ -22,6 +22,7 @@ def post_reading(gwtimestamp, node, sensor, seqno, value, tag):
                    'node': node.id,
                    'sensor': sensor.id,
                    'value': value,
+                   'seqno': seqno,
                    'tag': tag
               }
     try:

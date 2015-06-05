@@ -103,6 +103,8 @@ class Reading(models.Model):
 
     gwtimestamp = models.DateTimeField(default=timezone.now())
 
+    seqno = models.PositiveIntegerField(blank=False, null=False)
+
     node = models.ForeignKey('Node', blank=False, null=False,
                         related_name='sensor_reading')
 
