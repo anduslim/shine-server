@@ -12,20 +12,21 @@ admin.autodiscover()
 
 
 urlpatterns = [
-    url(r'^deployment/$', views.DeploymentList.as_view()),
-    url(r'^deployment/(?P<pk>[0-9]+)/$', views.DeploymentDetail.as_view()),
-    url(r'^node/$', views.NodeList.as_view()),
-    url(r'^node/(?P<pk>[0-9]+)/$', views.NodeDetail.as_view()),
-    url(r'^confseq/$', views.ConfSeqList.as_view()),
-    url(r'^confseq/(?P<pk>[0-9]+)/$', views.ConfSeqDetail.as_view()),
-    url(r'^sensormap/$', views.SensorMapList.as_view()),
-    url(r'^sensormap/(?P<pk>[0-9]+)/$', views.SensorMapDetail.as_view()),
-    url(r'^sensor/$', views.SensorList.as_view()),
-    url(r'^sensor/(?P<pk>[0-9]+)/$', views.SensorDetail.as_view()),
-    url(r'^reading/$', views.ReadingList.as_view()),
-    url(r'^reading/(?P<pk>[0-9]+)/$', views.ReadingDetail.as_view()),
-    url(r'^statistics/$', views.StatisticsList.as_view()),
-    url(r'^statistics/(?P<pk>[0-9]+)/$', views.StatisticsDetail.as_view()),
+    url(r'^$', views.api_root),
+    url(r'^deployment/$', views.DeploymentList.as_view(), name='deployment-list'),
+    url(r'^deployment/(?P<pk>[0-9]+)/$', views.DeploymentDetail.as_view(), name='deployment-detail'),
+    url(r'^node/$', views.NodeList.as_view(), name='node-list'),
+    url(r'^node/(?P<pk>[0-9]+)/$', views.NodeDetail.as_view(), name='node-detail'),
+    url(r'^confseq/$', views.ConfSeqList.as_view(), name='confseq-list'),
+    url(r'^confseq/(?P<pk>[0-9]+)/$', views.ConfSeqDetail.as_view(), name='confseq-detail'),
+    url(r'^sensormap/$', views.SensorMapList.as_view(), name='sensormap-list'),
+    url(r'^sensormap/(?P<pk>[0-9]+)/$', views.SensorMapDetail.as_view(), name='sensormap-detail'),
+    url(r'^sensor/$', views.SensorList.as_view(), name='sensor-list'),
+    url(r'^sensor/(?P<pk>[0-9]+)/$', views.SensorDetail.as_view(), name='sensor-detail'),
+    url(r'^reading/$', views.ReadingList.as_view(), name='reading-list'),
+    url(r'^reading/(?P<pk>[0-9]+)/$', views.ReadingDetail.as_view(), name='reading-detail'),
+    url(r'^statistics/$', views.StatisticsList.as_view(), name='statistics-list'),
+    url(r'^statistics/(?P<pk>[0-9]+)/$', views.StatisticsDetail.as_view(), name='statistics-detail'),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
 

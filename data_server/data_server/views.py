@@ -1,5 +1,7 @@
 
 from rest_framework import generics
+from rest_framework.decorators import api_view
+from rest_framework.reverse import reverse
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -13,6 +15,18 @@ from data_server.permissions import IsOwnerOrReadOnly
 # class SessionAuthentication(OriginalSessionAuthentication):
 #     def enforce_csrf(self, request):
 #         return
+
+@api_view(('GET',))
+def api_root(request, format=None):
+    return Response({
+        'deployments': reverse('deployment-list', request=request, format=format),
+        'nodes': reverse('node-list', request=request, format=format),
+        'confseqs': reverse('confseq-list', request=request, format=format),
+        'sensormaps': reverse('sensormap-list', request=request, format=format),
+        'sensors': reverse('sensor-list', request=request, format=format),
+        'readings': reverse('reading-list', request=request, format=format),
+        'statistics': reverse('statistics-list', request=request, format=format)
+    })
 
 class DeploymentList(generics.ListCreateAPIView):
     """
@@ -140,4 +154,3 @@ class StatisticsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Statistics.objects.all()
     serializer_class = StatisticsSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    
