@@ -22,11 +22,12 @@ def post_reading(gwtimestamp, node, sensor, seqno, value, tag):
                    'node': node.id,
                    'sensor': sensor.id,
                    'value': value,
-                   'seqno': seqno,
+                   'sequence': seqno,
                    'tag': tag
               }
     try:
         print("payload" + str(payload))
+        #import pdb; pdb.set_trace()
         client = APIClient()
         client.login(username='shine', password='abc123')
         result = client.post('/reading/', payload, format='json')

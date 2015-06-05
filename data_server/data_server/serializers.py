@@ -45,7 +45,7 @@ class ReadingSerializer(serializers.ModelSerializer):
 
     class Meta:
             model = Reading
-            fields = ('id', 'timestamp', 'gwtimestamp', 'node', 'sensor', 'value', 'tag')
+            fields = ('id', 'timestamp', 'gwtimestamp', 'node', 'sensor', 'value', 'tag', 'sequence')
 
 
 class StatisticsSerializer(serializers.ModelSerializer):
