@@ -96,7 +96,7 @@ class MQTTDemuxClient:
 
         node = Node.objects.get(node_id=nodeid)
         sensormap = SensorMap.objects.get(conf_seq=node.conf_seq)
-        post_reading(RXTimestamp, node, sensormap.sensor, seq, value, "test"):
+        post_reading(RXTimestamp, node, sensormap.sensor, seq, value, "test")
         #result = TYPE_MAPPING[confSeq](self, int(nodeid), timestamp, seqno, timestamp, bitMap, message[15:])
         print("done with agregate")
 
