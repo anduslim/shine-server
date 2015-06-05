@@ -10,7 +10,7 @@ from actors.models import Node, Reading, Sensor, SensorMap
 
 logger = logging.getLogger(__name__)
 
-READINGS_POST_URL = "http://127.0.0.1/reading/"
+READINGS_POST_URL = "http://shineseniors.sns-i2r.org/reading/"
 
 def post_reading(gwtimestamp, node, sensor, seqno, value, tag):
     session = requests.session()
@@ -23,11 +23,14 @@ def post_reading(gwtimestamp, node, sensor, seqno, value, tag):
                    'tag': tag
               }
     try:
-        result = session.post(READINGS_POST_URL, data=json.dumps(payload), headers=headers)
-        if '200' not in str(result.status_code):
-            print("Error in shine: %s. [%s] seqno-%s" % (result.text, node.node_id, seqno))        
-        else:
-            print("Success posting in shine server!")
+        # result = session.post(READINGS_POST_URL, data=json.dumps(payload), headers=headers)
+        # if '200' not in str(result.status_code):
+        #     print("Error in shine: %s. [%s] seqno-%s" % (result.text, node.node_id, seqno))        
+        # else:
+        #     print("Success posting in shine server!")
+        client = APIClient()
+        client.login(username='shine', password='abc123')
+        result = client.post('/reading/', payload, format='json')
 
     except Exception as e:
         logger.error('Measurement data api error: %s' % str(e), exc_info=True)  
@@ -95,7 +98,7 @@ class MQTTDemuxClient:
         sensormap = SensorMap.objects.get(conf_seq=node.conf_seq)
         post_reading(RXTimestamp, node, sensormap.sensor, seq, value, "test"):
         #result = TYPE_MAPPING[confSeq](self, int(nodeid), timestamp, seqno, timestamp, bitMap, message[15:])
-        
+        print("done with agregate")
 
     def parse_sensor_pkt(self, nodeid, message):
         print("Parsing sensor packet");
