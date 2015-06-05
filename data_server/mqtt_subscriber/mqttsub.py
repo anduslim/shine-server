@@ -4,10 +4,34 @@ import struct
 import pytz
 import math
 import logging
+import requests
 from django.conf import settings
+from actors.models import Node, Reading, Sensor, SensorMap
 
 logger = logging.getLogger(__name__)
- 
+
+READINGS_POST_URL = "http://127.0.0.1/reading/"
+
+def post_reading(gwtimestamp, node, sensor, seqno, value, tag):
+    session = requests.session()
+    headers = {'content-type': 'application/json'}
+    payload = {
+                   'gwtimestamp': gwtimestamp,
+                   'node': node,
+                   'sensor': seqno,
+                   'value': value,
+                   'tag': tag
+              }
+    try:
+        result = session.post(READINGS_POST_URL, data=json.dumps(payload), headers=headers)
+        if '200' not in str(result.status_code):
+            print("Error in shine: %s. [%s] seqno-%s" % (result.text, node.node_id, seqno))        
+        else:
+            print("Success posting in shine server!")
+
+    except Exception as e:
+        logger.error('Measurement data api error: %s' % str(e), exc_info=True)  
+
 
 class MQTTDemuxClient:
 
@@ -62,6 +86,14 @@ class MQTTDemuxClient:
         print("length %d" % length)
         lenData = len(message[14:])
         print("Remaining Data Length :%d\n" % lenData)
+        if lenData == 1:
+            value = message[14:]
+        else:
+            value = 0
+
+        node = Node.objects.get(node_id=nodeid)
+        sensormap = SensorMap.objects.get(conf_seq=node.conf_seq)
+        post_reading(RXTimestamp, node, sensormap.sensor, seq, value, "test"):
         #result = TYPE_MAPPING[confSeq](self, int(nodeid), timestamp, seqno, timestamp, bitMap, message[15:])
         
 
