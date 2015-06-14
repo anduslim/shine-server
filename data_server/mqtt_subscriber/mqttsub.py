@@ -1,5 +1,6 @@
 import paho.mqtt.client as paho
 import datetime
+import time
 import struct
 import pytz
 import math
@@ -59,7 +60,9 @@ class MQTTDemuxClient:
                 self.parse_sensor_pkt(topic[3], messagebyte)
         elif topic[1] == 'statistics' and len(topic) == 5:
             self.parse_statistics_pkt(topic[2], topic[4], messagebyte.decode('utf-8'))
- 
+        elif topic[1] == 'control' and len(topic) == 4:
+            self.parse_control_pkt(topic[2], topic[3], messagebyte.decode('utf-8')) 
+
     def on_publish(self, client, userdata, mid):
         logger.debug('On publishing mib: %s ' % (str(mid))) 
     
@@ -95,15 +98,27 @@ class MQTTDemuxClient:
         else:
             value = 0
         print("value " + str(value))
-        node = Node.objects.get(node_id=nodeid)
-        sensormap = SensorMap.objects.get(conf_seq=node.conf_seq)
-        post_reading(RXTimestamp, node, sensormap.sensor, seq, value, "test")
+        try:
+            node = Node.objects.get(node_id=nodeid)
+            sensormap = SensorMap.objects.get(conf_seq=node.conf_seq)
+            post_reading(RXTimestamp, node, sensormap.sensor, seq, value, "test")
+        except Node.DoesNotExist as Error:
+            logger.error('ERROR! Model query return invalid result: ' + str(Error))
+            print('ERROR! Model query return invalid result: ' + str(Error))
         print("done with agregate")
 
     def parse_sensor_pkt(self, nodeid, message):
         print("Parsing sensor packet");
         print("/******* END PACKET PARSING******/\n\n")
 
+
+    def parse_control_pkt(self, type, command, message):
+        if type == 'time':
+            if command == 'req':
+                curr_time = int(time.time())
+                topic = 'shine/control/time/res'
+                print('Publishing to ' + topic) 
+                self.mqttc.publish(topic, curr_time)
 
     def parse_statistics_pkt(self, nodeid, type, message):
         pass
